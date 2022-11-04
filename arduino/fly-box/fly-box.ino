@@ -108,6 +108,17 @@ void loop() {
   digitalWrite(LED_2, LOW);
   
   delay(8000);
+
+  digitalWrite(LED_1, HIGH);
+  char Pressure_d[20];
+  getPressureData(Pressure_d);
+  digitalWrite(LED_1, LOW);
+  Serial.println(Pressure_d);
+  digitalWrite(LED_2, HIGH);
+  sendData(Pressure_d);
+  digitalWrite(LED_2, LOW);
+  
+  delay(8000);
   
   digitalWrite(LED_1, HIGH);
   char CO_data[20];//get co data e manda a mkr
@@ -303,7 +314,30 @@ void getPM25(char return_value[]) {
   }  
 }
 
+void getPressureData(char return_value[]) {
+  float pressure = 0.00;
+  double P = getPressure();//prende la pressione dal sebnsore
+ 
+  char pressure_ch[6];//variabile char per conversione
+  if (P) {//se la pressione cè 
+    pressure = (float) P;//viene inserita nella variabile floatt
+     
+    
+  };
+  dtostrf(pressure, 7, 2, pressure_ch);//conversione pressione float in char
 
+     
+  
+  char unified[20];//char finale con id valore
+  strcpy(unified, pressure_ch);//aggiunta valore sensore in char a char finale
+  strcat(unified, "-pressure");//aggiunta id a char finale
+  int len = (sizeof(unified)) -1;//restituzione valore
+  for (int i = 0; i< len; i++) {
+    return_value[i] = unified[i];
+  }  
+  
+  
+}
 //funzioni sensori
 double getPressure()
 {

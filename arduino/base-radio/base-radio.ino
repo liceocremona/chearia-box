@@ -1,13 +1,4 @@
-// Wire Master Writer
-// by Nicholas Zambetti <http://www.zambetti.com>
-
-// Demonstrates use of the Wire library
-// Writes data to an I2C/TWI slave device
-// Refer to the "Wire Slave Receiver" example for use with this
-
-// Created 29 March 2006
-
-// This example code is in the public domain.
+//Codice ricevitore base
 
 
 #include <Wire.h>
@@ -22,8 +13,8 @@ void setup() {
   Serial.begin(9600);
   Wire.begin(); // join i2c bus (address optional for master)
    if (!radio.begin(7, 8)) {
-  Serial.println(F("radio hardware not responding!"));
-  while (1) {Serial.println("radio hardware not responding!");} // hold program in infinite loop to prevent subsequent errors
+  Serial.println("La radio non funziona");
+  while (1) {Serial.println("La radio non funziona");} // hold program in infinite loop to prevent subsequent errors
 }
 radio.openReadingPipe(0, address);
   radio.setPALevel(RF24_PA_HIGH);
@@ -31,7 +22,7 @@ radio.openReadingPipe(0, address);
 }
 
 void loop() {
-  Serial.println(F("radio hardware responding!"));
+  Serial.println("Ascoltando sul canale radio...");
   if (radio.available()) {
     char data[32] = "";
     radio.read(&data, sizeof(data));
