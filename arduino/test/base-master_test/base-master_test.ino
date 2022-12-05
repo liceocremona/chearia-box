@@ -16,7 +16,6 @@ String key = KEY;
 WiFiSSLClient wifi_client;  //Inizializzazione classe del client WiFi per fare richieste internet
 HttpClient client = HttpClient(wifi_client, api_server, 443);  //Inizializzazione client HTTP 9quello che esegue la richiesta ai link)
 int status;
-int requests = 0;
 
 /*
 /// HTTP client errors
@@ -39,13 +38,10 @@ int requests = 0;
 
 
 void setup() {
-  Serial.begin(9600);
-
-  Serial.println("son vivo");
   Wire.begin(8);  //Inizializzazione connessione I2C con il microcontrollore a 3.3V
   pinMode(LED_1, OUTPUT);
   pinMode(LED_2, OUTPUT);
-  
+  Serial.begin(9600);
   Serial.println("inizio connessione alla rete");
   digitalWrite(LED_1, HIGH);
   while (WiFi.status() != WL_CONNECTED) {
@@ -124,12 +120,6 @@ bool addData(String dataName, float Data) {
     client = HttpClient(wifi_client, api_server, 443);  //Inizializzazione client HTTP 9quello che esegue la richiesta ai link)
     delay(100);
   }
-
-  if (requests > 95) {
-    client.stop();   
-    client = HttpClient(wifi_client, api_server, 443);  //Inizializzazione client HTTP 9quello che esegue la richiesta ai link)
-    requests = 0;
-  }
   Serial.println(dataName);
   Serial.println(Data);
   // questa funzione aggiunge i dati al db
@@ -146,8 +136,6 @@ bool addData(String dataName, float Data) {
   Serial.println(req_path);
   client.connectionKeepAlive();
   client.put(req_path, contentType, body);  //richiesta http put
-  requests++;
-  Serial.println(requests);
   int statusCode = client.responseStatusCode();
   String response = client.responseBody();
   digitalWrite(LED_2, LOW);
@@ -156,7 +144,7 @@ bool addData(String dataName, float Data) {
   Serial.print("Risposta: ");
   Serial.println(response);
 
-  client.connectionKeepAlive();
+  while (client.available()) client.flush();
 
   
   if (statusCode == 200)  //se la richiesta ha successo ritorna true
