@@ -125,11 +125,11 @@ bool addData(String dataName, float Data) {
     delay(100);
   }
 
-  if (requests > 95) {
-    client.stop();   
-    client = HttpClient(wifi_client, api_server, 443);  //Inizializzazione client HTTP 9quello che esegue la richiesta ai link)
-    requests = 0;
-  }
+//  if (requests > 95) {
+//    client.stop();   
+//    client = HttpClient(wifi_client, api_server, 443);  //Inizializzazione client HTTP 9quello che esegue la richiesta ai link)
+//    requests = 0;
+//  }
   Serial.println(dataName);
   Serial.println(Data);
   // questa funzione aggiunge i dati al db
@@ -151,6 +151,15 @@ bool addData(String dataName, float Data) {
   int statusCode = client.responseStatusCode();
   String response = client.responseBody();
   digitalWrite(LED_2, LOW);
+  if (statusCode != 200) {
+    Serial.println(WiFi.status());
+    client.stop();          //chiusura client http
+    status = WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    Serial.print(".");
+    client = HttpClient(wifi_client, api_server, 443);  //Inizializzazione client HTTP 9quello che esegue la richiesta ai link)
+    delay(100);
+    
+  }
   Serial.print("Status code: ");
   Serial.println(statusCode);
   Serial.print("Risposta: ");

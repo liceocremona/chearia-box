@@ -23,6 +23,7 @@ DHT dht(2, DHT11);
 
 #define LED_1 3
 #define LED_2 4
+#define DELAY 2500
 //#include <MQ131.h>
 //int time_wait_ozone = 0;
 
@@ -107,7 +108,7 @@ void loop() {
   sendData(Altitude);
   digitalWrite(LED_2, LOW);
   
-  delay(8000);
+  delay(DELAY);
 
   digitalWrite(LED_1, HIGH);
   char Pressure_d[20];
@@ -118,7 +119,7 @@ void loop() {
   sendData(Pressure_d);
   digitalWrite(LED_2, LOW);
   
-  delay(8000);
+  delay(DELAY);
   
   digitalWrite(LED_1, HIGH);
   char CO_data[20];//get co data e manda a mkr
@@ -129,7 +130,7 @@ void loop() {
   sendData(CO_data);
   digitalWrite(LED_2, LOW);
   
-  delay(8000);
+  delay(DELAY);
   
   digitalWrite(LED_1, HIGH);
   char temperture_mis[20]; //get temperatura, converti in 
@@ -140,7 +141,7 @@ void loop() {
   sendData(temperture_mis);
   digitalWrite(LED_2, LOW);
   
-  delay(8000);
+  delay(DELAY);
 
   digitalWrite(LED_1, HIGH);
   char humidity_mis[20];
@@ -151,7 +152,7 @@ void loop() {
   sendData(humidity_mis);
   digitalWrite(LED_2, LOW);
   
-  delay(8000);
+  delay(DELAY);
   
 //  char ozone_data[20];
 // getOzone(ozone_data);
@@ -169,7 +170,6 @@ void loop() {
 //  getPM25(pm25_data);
 //  Serial.println(pm25_data);
 //  sendData(pm25_data);
- delay(5000);
 }
 
 
