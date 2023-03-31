@@ -1,4 +1,4 @@
-//https client
+//test https client on esp32
 
 #include <Arduino.h>
 #include "secret.h"
