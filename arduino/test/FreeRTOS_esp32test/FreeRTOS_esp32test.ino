@@ -80,12 +80,6 @@ const char *rootCACertificate =
 
 
 
-#if CONFIG_FREERTOS_UNICORE
-#define ARDUINO_RUNNING_CORE 0
-#else
-#define ARDUINO_RUNNING_CORE 1
-#endif
-
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 13
 #endif
@@ -96,6 +90,14 @@ void TaskAnalogReadA3(void *pvParameters);
 QueueHandle_t xQueue;
 
 WiFiMulti WiFiMulti;
+
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+RF24 radio; // CE, CSN
+
+const byte address[6] = "00001";
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -116,6 +118,14 @@ void setup() {
     Serial.print(".");
   }
   Serial.println(" connected");
+
+  if (!radio.begin(4, 5)) {
+  Serial.println(F("radio hardware not responding!"));
+  while (1) {Serial.println("radio hardware not responding!");} // hold program in infinite loop to prevent subsequent errors
+}
+  radio.openReadingPipe(0, address);
+  radio.setPALevel(RF24_PA_MIN);
+  radio.startListening();
 
   xQueue = xQueueCreate(6, 10);
   // Now set up two tasks to run independently.
@@ -160,9 +170,15 @@ void TaskBlink(void *pvParameters)  // This is a task.
 
   // initialize digital LED_BUILTIN on pin 13 as an output.
   pinMode(LED_BUILTIN, OUTPUT);
+  int n = 0;
 
   for (;;)  // A Task shall never return or exit.
   {
+uint8_t pipe;
+  if (radio.available()) {
+    char text[32] = "";
+    radio.read(&text, sizeof(text));
+    Serial.println(text);
     Serial.print("Task1 running on core ");
   Serial.println(xPortGetCoreID());
 
@@ -170,7 +186,13 @@ void TaskBlink(void *pvParameters)  // This is a task.
     //Serial.println("task 1");
     char data_code[10] = "69-itwork";
     xQueueSendToBack(xQueue, &data_code, 0);
-    vTaskDelay(2000 / portTICK_PERIOD_MS);
+    vTaskDelay(5 / portTICK_PERIOD_MS);
+   // if(text==0){Serial.println("testo vuoto");}
+  }
+    
+    
+    
+    vTaskDelay(5 / portTICK_PERIOD_MS);
   }
 }
 
@@ -235,7 +257,7 @@ void TaskAnalogReadA3(void *pvParameters)  // This is a task.
         }
 
         Serial.println("pass2");
-        vTaskDelay(15 / portTICK_PERIOD_MS);
+        vTaskDelay(5 / portTICK_PERIOD_MS);
         Serial.println("pass3");
       }
      

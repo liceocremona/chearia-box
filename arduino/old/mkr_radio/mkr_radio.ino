@@ -20,7 +20,7 @@ RF24 radio; // CE, CSN
 const byte address[6] = "00001";
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   if (!radio.begin(4, 5)) {
   Serial.println(F("radio hardware not responding!"));
   while (1) {Serial.println("radio hardware not responding!");} // hold program in infinite loop to prevent subsequent errors

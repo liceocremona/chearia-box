@@ -28,21 +28,79 @@ WIFI_PASSWORD: Password della WiFi
 
 */
 
-#if CONFIG_FREERTOS_UNICORE
-#define ARDUINO_RUNNING_CORE 0
-#else
-#define ARDUINO_RUNNING_CORE 1
-#endif
+
 
 #define ARDUINOJSON_USE_DOUBLE 0  //arduinojson setting
 
 String key = KEY;
 
-const char *rootSSLCertificate = SSL_CERTIFICATE;
+const char *rootCACertificate =
+  "-----BEGIN CERTIFICATE-----\n"
+  \ 
+"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\n"
+  \ 
+"-----END CERTIFICATE-----\n";
+String api_server = API_SERVER;
 
-String api_server_url = "https://" + API_SERVER
+String api_server_url = String("https://" + api_server);
 
-                          QueueHandle_t xDatasQueue;  //queue usata per passare i dati attraverso i task
+QueueHandle_t xQueueDatas;  //queue usata per passare i dati attraverso i task
 
 WiFiMulti WiFiMulti;
 
@@ -62,13 +120,16 @@ const byte address[6] = "00001";
 
 //CE e CSN per la comunicazione radio
 
-#define CE 26
-#define CSN 25
+#define CE 4
+#define CSN 5
 
 
 
 //INPUT TASK
 //questi task devono girare sul core 0
+
+bool wifi_conn = false;
+bool radio_init = false;
 
 void radioTask(void *pvParameters);
 //Controlla constantemente se arrivano dati dal modulo radio e li inserisce nella queue
@@ -80,7 +141,27 @@ void radioTask(void *pvParameters);
 void uploadTask(void *pvParameters);
 //Prende i dati dalla queue e li li inserisce sul DB con una richiesta alle API
 
+struct receiveDataStruct {
+  String data_name;
+  float data_value;
+};
 
+receiveDataStruct parseData(String data) {
+  receiveDataStruct data_structure;
+  //Qesta funzione ottiene la String dalla funzione precedente e separa il valore dal nome del dato
+  //Es. 22.8-temperature --> valore: 22.8 nome dato: temperature
+  int char_len = data.length() + 1;                 //Lunghezza String
+  char coded_data[char_len];                        //Creazione di un array di char pari alla lunghezza della String
+  data.toCharArray(coded_data, char_len);           //Conversione della Strin in un array di char
+  char *ch_measurement = strtok(coded_data, "-");   //Array di char contenente il valore
+  char *data_name_ch = strtok(NULL, "-");           //Array di char contenente il nome del dato
+  String str_measurement = String(ch_measurement);  //COnversione in Float
+  float measurement = str_measurement.toFloat();
+  String data_name = String(data_name_ch);
+  data_structure.data_name = data_name;
+  data_structure.data_value = measurement;
+  return data_structure;
+}
 
 void sdcardTask(void *pvParameters);
 //TO DO in future
@@ -91,16 +172,36 @@ void sdcardTask(void *pvParameters);
 void setup() {
   Serial.begin(115200);
 
-  if (!radio.begin(CE, CSN)) {
+  while (!wifi_conn) {
+    WiFi.mode(WIFI_STA);
+  WiFiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
+
+  // wait for WiFi connection
+  Serial.print("Waiting for WiFi to connect...");
+  while ((WiFiMulti.run() != WL_CONNECTED)) {
+    Serial.print(".");
+  }
+  Serial.println(" connected");
+  wifi_conn = true;
+
+  }
+
+   if (!radio_init) {
+ if (!radio.begin(CE, CSN)) {
     Serial.println("La radio non funziona");
     while (1) { Serial.println("La radio non funziona"); }  // hold program in infinite loop to prevent subsequent errors
   }
   radio.openReadingPipe(0, address);
   radio.setPALevel(RF24_PA_HIGH);
   radio.startListening();
+  radio_init = true;    
+  }
+ 
+
+ 
 
 
-  xQueueDatas = xQueueCreate(6, 10);
+  xQueueDatas = xQueueCreate(6, 20);
 
   xTaskCreatePinnedToCore(
     radioTask, "radioTask"  // A name just for humans
@@ -109,14 +210,14 @@ void setup() {
     ,
     NULL, 200  // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
     ,
-    NULL, 0);
+    NULL, 1);
 
   xTaskCreatePinnedToCore(
     uploadTask, "uploadTask", 1024 * 64  // Stack size
     ,
-    NULL, 200  // Priority
+    NULL, 201 // Priority
     ,
-    NULL, 1);
+    NULL, 0);
 }
 
 void loop() {
@@ -124,17 +225,71 @@ void loop() {
 
 void radioTask(void *pvParameters) {
 
+ 
+
   (void)pvParameters;
 
-  for ( ; ; ) {
-    Serial.println("Ascoltando sul canale radio...");
-   if (radio.available()) {
-    char data[32] = "";
-    radio.read(&data, sizeof(data));
-    Serial.println(data);
+  for (;;) {
     
-    vTaskDelay(100 / portTICK_PERIOD_MS);
-   }
-    vTaskDelay(5 / portTICK_PERIOD_MS);
+    if (radio.available()) {
+      Serial.print("Radio task running on core ");
+    Serial.println(xPortGetCoreID());
+      char data[20] = "";
+      radio.read(&data, sizeof(data));
+      Serial.println(data);
+      xQueueSendToBack(xQueueDatas, &data, 0);
+
+
+    }
+vTaskDelay(1 / portTICK_PERIOD_MS);
   }
 }
+
+void uploadTask(void *pvParameters) {
+
+  (void)pvParameters;
+  
+
+   
+
+  WiFiClientSecure *client = new WiFiClientSecure;
+  if (client) {
+    client->setCACert(rootCACertificate);
+
+    HTTPClient https;
+    https.setReuse(true);
+
+    if (https.begin(*client, api_server_url)) {
+      for (;;) {
+        Serial.print("uploadTask running on core ");
+        Serial.println(xPortGetCoreID());
+        int queue_items = uxQueueMessagesWaiting(xQueueDatas);
+
+        if (queue_items > 0) {
+          char data_string[20];
+          xQueueReceive(xQueueDatas, &data_string, 0);
+          String data_string_Str = String(data_string);
+          receiveDataStruct data_parsed;
+          data_parsed = parseData(data_string_Str);
+
+          StaticJsonDocument<120> doc;              //creazione doc json per body  della richiesta http
+          String contentType = "application/json";  //formato body http
+          String body;
+          doc["key"] = key;  // aggiunta dati al doc json
+          doc["datavalue"] = data_parsed.data_value;
+          serializeJson(doc, body);  //conversione del doc json in String
+          String req_path = "/v1/board/putdata/" + data_parsed.data_name;
+          Serial.println(body);
+          Serial.print("faccio una richiesta a: ");
+          Serial.println(req_path);
+
+          https.setURL(req_path);
+          int httpCode = https.PUT(body);
+          Serial.println(httpCode);
+          vTaskDelay(100 / portTICK_PERIOD_MS);
+        }
+        vTaskDelay(30 / portTICK_PERIOD_MS);
+      }
+    }
+  }
+}  
