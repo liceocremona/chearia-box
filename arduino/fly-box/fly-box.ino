@@ -40,6 +40,9 @@ void setup() {
   radio.stopListening();
   pinMode(LED_1, OUTPUT);
   pinMode(LED_2, OUTPUT);
+  pinMode(A2, INPUT);
+  pinMode(A3, INPUT);
+  pinMode(A6, INPUT);
 
 
   //impostazioni sensore pressione
@@ -153,6 +156,40 @@ void loop() {
   digitalWrite(LED_2, LOW);
   
   delay(DELAY);
+
+  digitalWrite(LED_1, HIGH);
+  char micsCO_data[20];
+  micsGetCO(micsCO_data);
+  digitalWrite(LED_1, LOW);
+  Serial.println(micsCO_data);
+  digitalWrite(LED_2, HIGH);
+  sendData(micsCO_data);
+  digitalWrite(LED_2, LOW);
+
+  delay (DELAY);
+
+    digitalWrite(LED_1, HIGH);
+  char NO2_data[20];
+  getNO2(NO2_data);
+  digitalWrite(LED_1, LOW);
+  Serial.println(NO2_data);
+  digitalWrite(LED_2, HIGH);
+  sendData(NO2_data);
+  digitalWrite(LED_2, LOW);
+
+  delay (DELAY);
+
+    digitalWrite(LED_1, HIGH);
+  char NH3_data[20];
+  getNH3(NH3_data);
+  digitalWrite(LED_1, LOW);
+  Serial.println(NH3_data);
+  digitalWrite(LED_2, HIGH);
+  sendData(NH3_data);
+  digitalWrite(LED_2, LOW);
+
+  delay (DELAY);
+  
   
 //  char ozone_data[20];
 // getOzone(ozone_data);
@@ -395,4 +432,46 @@ double getPressure()
     else Serial.println("error retrieving temperature measurement\n");
   }
   else Serial.println("error starting temperature measurement\n");
+}
+
+void micsGetCO (char return_value[]) {
+ float savedValue = 0.00;
+ savedValue = analogRead(A2) * (5.0/1023.0);
+ char CO_mics_ch[6] ;
+ dtostrf(savedValue, 6, 3, CO_mics_ch);
+  char unified[20];
+  strcpy(unified, CO_mics_ch);
+  strcat(unified, "-CO_mics");
+  int len = (sizeof(unified)) -1;
+  for (int i = 0; i< len; i++) {
+    return_value[i] = unified[i];
+}
+}
+
+void getNO2 (char return_value[]) {
+   float savedValue = 0.00;
+ savedValue = analogRead(A4) * (5.0/1023.0);
+ char NO2_ch[6] ;
+ dtostrf(savedValue, 6, 3, NO2_ch);
+  char unified[20];
+  strcpy(unified, NO2_ch);
+  strcat(unified, "-NO2");
+  int len = (sizeof(unified)) -1;
+  for (int i = 0; i< len; i++) {
+    return_value[i] = unified[i];
+}
+}
+
+void getNH3 (char return_value[]) {
+    float savedValue = 0.00;
+ savedValue = analogRead(A6) * (5.0/1023.0);
+ char NH3_ch[6] ;
+ dtostrf(savedValue, 6, 3, NH3_ch);
+  char unified[20];
+  strcpy(unified, NH3_ch);
+  strcat(unified, "-NH3");
+  int len = (sizeof(unified)) -1;
+  for (int i = 0; i< len; i++) {
+    return_value[i] = unified[i];
+}
 }
